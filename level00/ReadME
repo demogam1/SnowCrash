@@ -1,0 +1,50 @@
+Mes etape pour trouver le flag00
+
+1 - Je rentre la commande find / -user flag00 -readable -type f -exec ls -l {} \; 2>/dev/null qui me print cette liste :
+
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/pagemap
+-rw-rw-rw- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/current
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/prev
+-rw-rw-rw- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/exec
+-rw-rw-rw- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/fscreate
+-rw-rw-rw- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/keycreate
+-rw-rw-rw- 1 flag00 flag00 0 May  4 20:07 /proc/4479/attr/sockcreate
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/wchan
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/stack
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/schedstat
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/latency
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/cpuset
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/cgroup
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/oom_score
+-rw-r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/oom_adj
+-rw-r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/oom_score_adj
+-rw-r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/loginuid
+-r--r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/sessionid
+-rw-r--r-- 1 flag00 flag00 0 May  4 20:07 /proc/4479/coredump_filter
+----r--r-- 1 flag00 flag00 15 Mar  5  2016 /usr/sbin/john
+----r--r-- 1 flag00 flag00 15 Mar  5  2016 /rofs/usr/sbin/john
+
+2 - Les deux derniere ligne me semble suspect du coup je fait la commande cat dessus :
+
+level00@SnowCrash:~$ cat /usr/sbin/john
+cdiiddwpgswtgt
+level00@SnowCrash:~$ cat /rofs/usr/sbin/john
+cdiiddwpgswtgt
+
+3 - Le deux commande m'affiche la meme chose du coup je teste si c'est le mots de passe puisque ca ne fonctionne pas j'essaie de le decoder.
+
+4 - La methode d'encryptage semble etre le Substitution Cipher du coup j'essaie plusieurs methode de decryptage et le Cipher Disk/Wheel
+semble etre le bon car le resultat est : NOTTOOHARDHERE => NOT TOO HARD HERE
+
+5 - Je teste :
+
+level00@SnowCrash:~$ su flag00
+Password:
+Don't forget to launch getflag !
+flag00@SnowCrash:~$ getflag
+Check flag.Here is your token : x24ti5gi3x0ol2eh4esiuxias
+flag00@SnowCrash:~$ su level01
+Password:
+level01@SnowCrash:~$ 
+
+  Ça marche !!

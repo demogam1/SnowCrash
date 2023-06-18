@@ -1,0 +1,10 @@
+La version du kernel de la machine presente une vulnerabilite
+Il existe un script qui peut exploiter cette vulnerabilite et faire une escalade de privilege pour avoir les droits Root et donc pouvoir changer tout le mot de passe du user flag et obtenir le "FLAG"
+
+firefart@SnowCrash:/var/crash# su flag12
+Don't forget to launch getflag !
+flag12@SnowCrash:~$ getflag
+Check flag.Here is your token : g1qKMiRpXf53AWhDaU7FEkczr
+flag12@SnowCrash:~$ su level13
+Password:
+level13@SnowCrash:~$

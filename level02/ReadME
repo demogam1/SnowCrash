@@ -1,0 +1,40 @@
+Arriver sur ce niveau j'ai fait un ls et j'ai trouver un fichier .pcap
+
+    level02@SnowCrash:~$ ls
+    level02.pcap
+
+Quelque recherche sur google je comprend que je dois utilser wireshark pour
+extraire les donnés de ce fichier. 
+
+Apres avoir ouvert le fichier avec wireshark je vois tous les packets echanger
+et leurs donnés , je fait un clique droit sur un des packets ensuite sur 'follow' et 'follow tcp stream' 
+
+    ..%..%..&..... ..#..'..$..&..... ..#..'..$.. .....#.....'........... .38400,38400....#.SodaCan:0....'..DISPLAY.SodaCan:0......xterm.........."........!........"..".....b........b....	B.
+    ..............................1.......!.."......"......!..........."........"..".............	..
+    .....................
+    Linux 2.6.38-8-generic-pae (::ffff:10.1.1.2) (pts/10)
+
+    ..wwwbugs login: l.le.ev.ve.el.lX.X
+    ..
+    Password: ft_wandr...NDRel.L0L
+    .
+    ..
+    Login incorrect
+    wwwbugs login:
+
+Je test le mots de passe ft_wandr...NDRel.L0L mais cela ne fonctionne pas.
+Sachant que chaque lettre un packets tcp j'analyze lettre par lettre , le packet du point indique comme donné contenu "\177".
+
+Cette donnés ne correspond pas a un point mais au caractere non affichable EFFACER , cela signifie que chaque point correspond au nombre de fois que l'utilisateur a appuyer sur la touche EFFACER.
+Donc je change le mots de pass en "ft_waNDReL0L" et je teste 
+
+    level02@SnowCrash:~$ su flag02
+    Password: ft_waNDReL0L
+    Don't forget to launch getflag !
+    flag02@SnowCrash:~$ getflag
+    Check flag.Here is your token : kooda2puivaav1idi4f57q8iq
+    flag02@SnowCrash:~$ su level03
+    Password: kooda2puivaav1idi4f57q8iq
+    level03@SnowCrash:~$
+
+Ca fonctionne !
