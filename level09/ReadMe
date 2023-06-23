@@ -1,7 +1,37 @@
-f3iji1ju5yuevaus41q1afiuq
+strings level09
 
-su flag09
+[^_]
+You should not reverse this   // reagit a une tentative de reverse? donc on doit reverse?
+LD_PRELOAD
+Injection Linked lib detected exit..
+/etc/ld.so.preload
+/proc/self/maps
+/proc/self/maps is unaccessible, probably a LD_PRELOAD attempt exit..
+libc
+You need to provied only one arg.  // on doit fournir un argument
+00000000 00:00 0
+LD_PRELOAD detected through memory maps exit ..
+;*2$"$
 
-s5cAJpM8ev6XHw998pRWG728z
+cat token
+ f4kmm6p|=�p�n��DB�Du{��
 
-[ATTENTION NE PAS TESTER SUR MAC]
+./level09 token 
+=> result tpmhr
+
+./level09 "f4kmm6p|=�p�n��DB�Du{��"
+    f5mpq;v�E���|���~����[��`������
+
+./level09 "f4kmm6p"
+    f5mpq;v
+
+on test ./level09 "aaa"
+=> abc 
+./level09 "abcd"
+=> adgh 
+
+le cryptage c'est str[i] + i
+il faut reverse le cryptage pour trouver le bon token
+je target token avec decrypt.c
+
+token = f3iji1ju5yuevaus41q1afiuq
