@@ -1,10 +1,20 @@
-La version du kernel de la machine presente une vulnerabilite
-Il existe un script qui peut exploiter cette vulnerabilite et faire une escalade de privilege pour avoir les droits Root et donc pouvoir changer tout le mot de passe du user flag et obtenir le "FLAG"
+eclair de genie, devant l'adversite mon binome decide de tout reprendre depuis le debut.
 
-firefart@SnowCrash:/var/crash# su flag12
+uname -a pour savoir quelle est la version de l'os.
+recherche google => Linux  3.2.0-89 exploit ?
+
+OUI!!!
+
+La version du kernel de la machine presente une vulnerabilite.
+Il existe un script qui l'exploite. 
+Ce script est bien connu des hackeurs. Serions-nous sur le point de nous transformer en king pin?
+
+on compile le script et on suit le guide.
+gcc -pthread dirty.c -o dirty -lcrypt
+
+
+firefart@SnowCrash:cd /home/flag
+
 Don't forget to launch getflag !
 flag12@SnowCrash:~$ getflag
 Check flag.Here is your token : g1qKMiRpXf53AWhDaU7FEkczr
-flag12@SnowCrash:~$ su level13
-Password:
-level13@SnowCrash:~$
